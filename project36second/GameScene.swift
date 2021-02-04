@@ -38,23 +38,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         createLogos()
-        print("1");
         rock.physicsBody = SKPhysicsBody(texture: rockTexture, size: rockTexture.size());
-        print("2");
         rock.physicsBody?.isDynamic = false;
-        print("3");
         createSky();
-        print("6");
         createBackground();
-        print("9");
         createGround();
-        print("12");
-        
-        print("15");
         createScore();
-        print("18");
         createPlayer();
-        print("21");
         
         if let musicURL = Bundle.main.url(forResource: "music", withExtension: "m4a") {
             backgroundMusic = SKAudioNode(url: musicURL)
@@ -63,7 +53,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.gravity = CGVector(dx: 0.0, dy: -5.0)
         physicsWorld.contactDelegate = self
-        print("22");
     }
     
    
@@ -146,7 +135,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createPlayer() {
-        print("19");
         let playerTexture = SKTexture(imageNamed: "player-1")
         player = SKSpriteNode(texture: playerTexture)
         player.zPosition = 10
@@ -166,12 +154,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let runForever = SKAction.repeatForever(animation)
 
         player.run(runForever)
-        print("20");
     }
     
     func createSky() {
         
-        print("4");
         let topSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.14, brightness: 0.97, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.67))
         topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
 
@@ -186,11 +172,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         bottomSky.zPosition = -40
         topSky.zPosition = -40
-        print("5");
     }
     
     func createBackground() {
-        print("7");
         let backgroundTexture = SKTexture(imageNamed: "background")
 
         for i in 0 ... 1 {
@@ -207,11 +191,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             background.run(moveForever)
         }
-        print("8");
     }
     
     func createGround() {
-        print("10");
         let groundTexture = SKTexture(imageNamed: "ground")
 
         for i in 0 ... 1 {
@@ -229,12 +211,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             ground.run(moveForever)
         }
-        print("11");
     }
     
     func createRocks() {
         // 1
-        print("13.1");
         let topRock = rock.copy() as! SKSpriteNode;
         let bottomRock = rock.copy() as! SKSpriteNode;
         
@@ -276,11 +256,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         topRock.run(moveSequence)
         bottomRock.run(moveSequence)
         rockCollision.run(moveSequence)
-        print("13.2");
     }
     
     func startRocks() {
-        print("13");
         let create = SKAction.run { [unowned self] in
             self.createRocks()
         }
@@ -290,7 +268,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let repeatForever = SKAction.repeatForever(sequence)
 
         run(repeatForever)
-        print("14");
     }
     
     var score = 0 {
@@ -300,7 +277,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createScore() {
-        print("16");
         scoreLabel = SKLabelNode(fontNamed: "Optima-ExtraBlack")
         scoreLabel.fontSize = 24
 
@@ -309,7 +285,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.fontColor = UIColor.black
 
         addChild(scoreLabel)
-        print("17");
     }
     
     func createLogos() {
