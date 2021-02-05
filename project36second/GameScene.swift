@@ -27,7 +27,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameState = GameState.showingLogo;
     
     let rockTexture = SKTexture(imageNamed:  "rock");
-    let rock = SKSpriteNode(texture: SKTexture(imageNamed:  "rock"));
+    
+    let rock = SKSpriteNode(texture: SKTexture(imageNamed: "rock"));
+    let coinTexture = SKTexture(imageNamed: "coin");
+    let coin = SKSpriteNode(texture: SKTexture(imageNamed: "coin"));
     
     let explosion = SKEmitterNode(fileNamed: "PlayerExplosion")
     
@@ -36,10 +39,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         
-        
         createLogos()
         rock.physicsBody = SKPhysicsBody(texture: rockTexture, size: rockTexture.size());
         rock.physicsBody?.isDynamic = false;
+//        let coinHeight = coinTexture.size()// = 10;
+        coin.setScale(0.3);
+        coin.physicsBody = SKPhysicsBody(circleOfRadius: coinTexture.size().width / 12);
+        coin.physicsBody?.isDynamic = false;
         createSky();
         createBackground();
         createGround();
@@ -82,7 +88,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 };
             case .dead:
                 if let scene = GameScene(fileNamed: "GameScene") {
-                    scene.scaleMode = .resizeFill
+                    scene.scaleMode = .aspectFill
                     let transition = SKTransition.moveIn(with: SKTransitionDirection.right, duration: 1)
                     view?.presentScene(scene, transition: transition)
                 }
@@ -99,14 +105,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node?.name == "scoreDetect" || contact.bodyB.node?.name == "scoreDetect" {
-            if contact.bodyA.node == player {
+//            if contact.bodyA.node == player {
+//                contact.bodyB.node?.removeFromParent()
+//            } else {
+//                contact.bodyA.node?.removeFromParent()
+//            }
+//
+//            run(sound)
+//
+//            score += 1
+
+            return
+        }
+        
+        if contact.bodyA.node?.name == "coin" || contact.bodyB.node?.name == "coin" {
+            if contact.bodyA.node == player{
                 contact.bodyB.node?.removeFromParent()
             } else {
                 contact.bodyA.node?.removeFromParent()
             }
-            
             run(sound)
-
+            
             score += 1
 
             return
@@ -229,16 +248,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rockCollision.physicsBody = SKPhysicsBody(rectangleOf: rockCollision.size)
         rockCollision.physicsBody?.isDynamic = false
         rockCollision.name = "scoreDetect"
+        
+        let coinSprite = coin.copy() as! SKSpriteNode;
+        coinSprite.name = "coin";
+        
 
         addChild(topRock)
         addChild(bottomRock)
         addChild(rockCollision)
+        addChild(coinSprite);
 
         // 3
         let xPosition = frame.width + topRock.frame.width
 
         let max = CGFloat(frame.height / 3)
         let yPosition = CGFloat.random(in: -50...max)
+        
 
         // this next value affects the width of the gap between rocks
         // make it smaller to make your game harder – if you're feeling evil!
@@ -248,14 +273,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         topRock.position = CGPoint(x: xPosition, y: yPosition + topRock.size.height + rockDistance)
         bottomRock.position = CGPoint(x: xPosition, y: yPosition - rockDistance)
         rockCollision.position = CGPoint(x: xPosition + (rockCollision.size.width * 2), y: frame.midY)
+        coinSprite.position = CGPoint(x: topRock.position.x + 25, y: yPosition + 250)
 
+        
         let endPosition = frame.width + (topRock.frame.width * 2)
 
-        let moveAction = SKAction.moveBy(x: -endPosition, y: 0, duration: 6.2)
-        let moveSequence = SKAction.sequence([moveAction, SKAction.removeFromParent()])
-        topRock.run(moveSequence)
-        bottomRock.run(moveSequence)
-        rockCollision.run(moveSequence)
+        let moveAction = SKAction.moveBy(x: -endPosition, y: 0, duration: 6.2);
+        let moveSequence = SKAction.sequence([moveAction, SKAction.removeFromParent()]);
+        topRock.run(moveSequence);
+        bottomRock.run(moveSequence);
+        coinSprite.run(moveSequence);
+        rockCollision.run(moveSequence);
     }
     
     func startRocks() {
